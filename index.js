@@ -10,8 +10,8 @@ let curPlayer = 1;
 
 const makeBoardString = (board) => {
   let str = '';
-  for (let i = 0; i < 3; i++) {
-    for (let j = 0; j < 3; j++) {
+  for (let i = 0; i < board.length; i++) {
+    for (let j = 0; j < board[i].length; j++) {
       str += board[i][j] + ' ';
     }
     str += '\n';
@@ -97,3 +97,22 @@ const nextMove = () => {
 };
 
 nextMove();
+
+const testing = () => {
+  const makeBoardStringTest = () => {
+    const testBoard = [[0], [0], [0]];
+    const str = makeBoardString(testBoard);
+    return str.length > 3 && str.length < 10;
+  };
+
+  const makeTotalStringTest = () => {
+    const testBoard = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
+    const str = makeTotalString(testBoard, 1);
+    const isPlayer = str.includes('Player 1\'s');
+    const isBoard = str.includes('0 0 0');
+    return isPlayer && isBoard;
+  };
+
+  console.log(makeBoardStringTest());
+  console.log(makeTotalStringTest());
+}
