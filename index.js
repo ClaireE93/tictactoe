@@ -26,12 +26,13 @@ const makeTotalString = (board, player) => {
   return str;
 }
 
-const checkForWinner = (board) => {
+const checkForWinner = (board, mark) => {
   // Check rows
   for (let i = 0; i < 3; i++) {
     const arr = board[i];
     const tot = arr.reduce((accu, cur) => {
-      return accu + cur;
+      if (cur === mark) { return accu + 1; }
+      return accu;
     }, 0);
     if (tot === 3) { return true; }
   }
@@ -39,14 +40,23 @@ const checkForWinner = (board) => {
   for (let i = 0; i < 3; i++) {
     let tot = 0;
     for (let j = 0; j < 3; j++) {
-      tot += board[j][i];
+      if (board[j][i] === mark) {
+        tot++;
+      }
     }
     if (tot === 3) { return true; }
   }
   // Check diagonals
-  const major = board[0][0] + board [1][1] + board[2][2];
+  const major = [board[0][0], board [1][1], board[2][2]].reduce((accu, cur) => {
+    if (cur === mark) { return accu + 1; }
+    return accu;
+  }, 0);
   if (major === 3) { return true; }
-  const minor = board[0][2] + board[1][1] + board[2][0];
+
+  const minor = [board[0][2], board[1][1], board[2][0]].reduce((accu, cur) => {
+    if (cur === mark) { return accu + 1; }
+    return accu;
+  }, 0);
   if (minor === 3) { return true; }
   return false;
 };
@@ -58,34 +68,32 @@ console.log(makeTotalString(board, curPlayer));
 console.log('enter your move as [row, col], where each is a number between 1 and 3');
 const nextMove = () => {
   prompt.get(['move'], function (err, result) {
-    const arr = JSON.parse(result.move);
-    board[arr[0]][arr[1]] = 1;
-    isGame = checkForWinner(board);
-    count++;
-    if (count === 9) { return; }
+    let arr;
+    try {
+      arr = JSON.parse(result.move);
+    } catch(err) {
+      if (!result) { return; }
+      console.log('Invalid entry! Please enter your move as [row, col], where each is a number between 1 and 3')
+      nextMove();
+      return;
+    }
+    if (arr.length !== 2 || arr[0] > 2 || arr[0] < 0 || arr[1] > 2 || arr[1] < 0) {
+      console.log('Invalid entry! Please enter your move as [row, col], where each is a number between 1 and 3')
+      nextMove();
+      return;
+    }
+    const mark = curPlayer === 1 ? 'X' : 'O';
+    board[arr[0]][arr[1]] = mark;
+    isGame = checkForWinner(board, mark);
     if (isGame) {
       console.log(`Player ${curPlayer} Wins!`);
       console.log(makeBoardString(board));
     } else {
-      const nextPlayer = curPlayer === 1 ? 2 : 1;
-      console.log(makeTotalString(board, nextPlayer));
+      curPlayer = curPlayer === 1 ? 2 : 1;
+      console.log(makeTotalString(board, curPlayer));
       nextMove();
     }
   });
-}
+};
 
 nextMove();
-// prompt.get(['move'], function (err, result) {
-//   console.log('  Move: ' + result.move);
-//   const arr = JSON.parse(result.move);
-//   board[i][j] = 1;
-//   isGame = checkForWinner(board);
-//   if (isGame) {
-//     console.log(`${curPlayer} Wins!`);
-//     console.log(makeBoardString(board));
-//   } else {
-//     const nextPlayer = curPlayer === 1 ? 2 : 1;
-//     console.log(makeTotalString(board, nextPlayer));
-//     nextMove();
-//   }
-// });
