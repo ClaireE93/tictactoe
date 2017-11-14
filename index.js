@@ -69,6 +69,7 @@ console.log('enter your move as [row, col], where each is a number between 1 and
 const nextMove = () => {
   prompt.get(['move'], function (err, result) {
     let arr;
+    // Error handling
     try {
       arr = JSON.parse(result.move);
     } catch(err) {
@@ -83,11 +84,21 @@ const nextMove = () => {
       return;
     }
     const mark = curPlayer === 1 ? 'X' : 'O';
+    if (board[arr[0]][arr[1]]) {
+      console.log('This spot is taken, try again');
+      nextMove();
+      return;
+    }
+    
+    // Place mark and check if there's a winner
     board[arr[0]][arr[1]] = mark;
+    count++;
     isGame = checkForWinner(board, mark);
     if (isGame) {
       console.log(`Player ${curPlayer} Wins!`);
       console.log(makeBoardString(board));
+    } else if (count === 9) {
+      console.log(`It's a draw! Game over.`);
     } else {
       curPlayer = curPlayer === 1 ? 2 : 1;
       console.log(makeTotalString(board, curPlayer));
@@ -113,6 +124,17 @@ const testing = () => {
     return isPlayer && isBoard;
   };
 
+  const checkForWinnerTest = () => {
+    const testBoard = [['X', 0, 0], ['X', 0, 0], ['X', 0, 0]];
+    const testBoard2 = [['X', 0, 0], ['O', 0, 0], ['X', 0, 0]];
+    const isWin = checkForWinner(testBoard);
+    const isWin2 = checkForWinner(testBoard2);
+    return isWin && !isWin;
+  }
+
   console.log(makeBoardStringTest());
   console.log(makeTotalStringTest());
-}
+  console.log(checkForWinnerTest());
+};
+
+// testing();
