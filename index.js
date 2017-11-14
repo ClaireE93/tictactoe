@@ -89,7 +89,7 @@ const nextMove = () => {
       nextMove();
       return;
     }
-    
+
     // Place mark and check if there's a winner
     board[arr[0]][arr[1]] = mark;
     count++;
@@ -107,7 +107,7 @@ const nextMove = () => {
   });
 };
 
-nextMove();
+// nextMove();
 
 const testing = () => {
   const makeBoardStringTest = () => {
@@ -127,9 +127,9 @@ const testing = () => {
   const checkForWinnerTest = () => {
     const testBoard = [['X', 0, 0], ['X', 0, 0], ['X', 0, 0]];
     const testBoard2 = [['X', 0, 0], ['O', 0, 0], ['X', 0, 0]];
-    const isWin = checkForWinner(testBoard);
-    const isWin2 = checkForWinner(testBoard2);
-    return isWin && !isWin;
+    const isWin = checkForWinner(testBoard, 'X');
+    const isWin2 = checkForWinner(testBoard2, 'X');
+    return isWin && !isWin2;
   }
 
   console.log(makeBoardStringTest());
