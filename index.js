@@ -107,7 +107,7 @@ const nextMove = () => {
   });
 };
 
-// nextMove();
+nextMove();
 
 const testing = () => {
   const makeBoardStringTest = () => {
